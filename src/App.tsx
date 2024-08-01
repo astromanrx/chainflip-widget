@@ -142,7 +142,7 @@ function App() {
                 primaryBackground
               )}
             >
-              Bridge
+              Swap
             </button>
           </CheckWalletConnectionButton>
         </div>
