@@ -1,6 +1,5 @@
 import { AssetData, Chain } from "@chainflip/sdk/swap";
 import { ethers, JsonRpcProvider } from "ethers";
-import { useAccount } from "wagmi";
 
 export const applyDecimal = (amount: number, token: AssetData): bigint => {
   // return ethers.formatUnits(amount, token.decimals);
