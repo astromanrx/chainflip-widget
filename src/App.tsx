@@ -70,7 +70,7 @@ function App() {
     return (
       <div
         className={cn(
-          "w-full lg:w-[600px] lg:max-w-[780px] flex items-center justify-center py-4 px-6 rounded-3xl border",
+          "w-full lg:w-[780px] lg:max-w-[780px] flex items-center justify-center py-4 px-6 rounded-3xl border",
           secondaryBackground,
           primaryBorder
         )}
