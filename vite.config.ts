@@ -24,7 +24,7 @@ export default defineConfig({
   },
   experimental: {
     renderBuiltUrl(filename: string) {
-      return "http://localhost:4173/" + filename;
+      return "https://chainflip-widget-psi.vercel.app/" + filename;
     },
   },
 });
