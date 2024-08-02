@@ -1,7 +1,7 @@
 import { Asset, AssetData, Chain } from "@chainflip/sdk/swap";
 
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import ArrowIcon from "../assets/svgs/arrow.svg";
 
@@ -11,7 +11,6 @@ import useConfig from "../hooks/useConfig";
 import { ArrowSwap16Regular } from "@fluentui/react-icons";
 import { cn } from "../utils/cn";
 import CircularLoader from "./wallet/ui/CircularLoader";
-import { useWidgetStore } from "../store";
 
 interface IProps {
   sourceToken: AssetData;
@@ -34,7 +33,6 @@ const QuoteDetail = ({
 
   const [open, setOpen] = useState(false);
 
-  const store = useWidgetStore();
 
   const getTokenDecimal = (asset: Asset) => {
     return Math.pow(
@@ -49,13 +47,7 @@ const QuoteDetail = ({
     destChain,
     destToken,
     amount,
-  });
-
-  useEffect(()=>{
-    if(isSuccess){
-      store.setDestAmount(parseFloat(ethers.formatUnits(data.quote.egressAmount,destToken.decimals)))
-    }
-  },[isSuccess,amount])
+  }); 
 
   return (
     <>

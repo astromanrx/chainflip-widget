@@ -1,7 +1,7 @@
 import { ArrowSwap16Regular } from "@fluentui/react-icons";
 import { useTokensInfo } from "../hooks/useTokensInfo";
 import { AssetData } from "@chainflip/sdk/swap";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useConfig from "../hooks/useConfig";
 import { cn } from "../utils/cn";
 import CircularLoader from "./wallet/ui/CircularLoader";
@@ -23,20 +23,17 @@ const AmountBox = (props: IAmountBoxProps) => {
   const [useUSDAmount, setUseUSDAmount] = useState(false);
   const [amount,setAmount] = useState("")  
   const [transformedAmount,setTransformedAmount] = useState("")
-
-  // useEffect(()=>{    
-  //   setAmount(props.amount.toString())
-  // },[props.amount])
+  
 
   const convertToUSD = (amount: number, token: AssetData) => {    
     const result =  (amount * getTokenInfo(token)?.price).toFixed(2)
-    console.log(`Convert ${amount}${token.symbol} to usd equals to ${result}`)
+    console.log(`Convert ${amount}${token.symbol} to usd equals to ${result} , ${token.symbol} price is ${getTokenInfo(token)?.price}`)
     return result
   }
 
   const fromUSD = (amount: number,token: AssetData)=> {    
     const result =  (amount / getTokenInfo(token)?.price).toFixed(5)
-    console.log(`Convert ${amount}$ to ${token.symbol} equals to ${result}`)
+    console.log(`Convert ${amount}$ to ${token.symbol} equals to ${result} , ${token.symbol} price is ${getTokenInfo(token)?.price}`)
     return result
   }
   

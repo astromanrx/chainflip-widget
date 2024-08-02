@@ -32,6 +32,13 @@ const useTokensInfo = () => {
       throw new Error(`Tokens information not loaded yet!`);      
     }
 
+    if(asset.asset === "BTC"){
+      return {
+        price: tokensInfo.find((token)=>token.name === "The Tokenized Bitcoin")!.priceUSD,
+        icon: "https://static.debank.com/image/eth_token/logo_url/0x2297aebd383787a160dd0d9f71508148769342e3/302c75014907af482ed27e9d91e14b8b.png"
+      }
+    }
+
     console.log(tokensInfo)
 
     const tokenInfo = tokensInfo!.find(
@@ -53,6 +60,9 @@ const useTokensInfo = () => {
     const tokenInfo = tokensInfo!.find(
       (token) => asset.chain === "Polkadot"? token?.name === "Polkadot Token" : token?.name === asset?.chain
     );
+
+    if(asset.chain === 'Bitcoin')
+      return "https://static.debank.com/image/eth_token/logo_url/0x2297aebd383787a160dd0d9f71508148769342e3/302c75014907af482ed27e9d91e14b8b.png"
 
     return tokenInfo?.logoURI || "";
   }
