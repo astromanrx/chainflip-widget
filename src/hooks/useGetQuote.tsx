@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { SwapSDK, SwapSDKOptions, type AssetData, type Chain } from "@chainflip/sdk/swap";
+import { type AssetData, type Chain } from "@chainflip/sdk/swap";
 import { queries } from "../static/queries";
 import { useDebounce } from "./useDebounce";
-import { applyDecimal } from "../utils";
+import { applyDecimal } from "../utils/utils";
 import { swapSDK } from "../swapSDK";
 
 interface IProps {

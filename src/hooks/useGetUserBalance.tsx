@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { queries } from "../static/queries";
-import { getTokenBalance } from "../utils";
+import { getTokenBalance } from "../utils/utils";
 import type { AssetData } from "@chainflip/sdk/swap";
 import { useAccount } from "wagmi";
 

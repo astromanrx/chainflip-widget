@@ -1,5 +1,4 @@
 import "./App.css";
-import { AssetData } from "@chainflip/sdk/swap";
 import { useState } from "react";
 import { ArrowSwap20Regular } from "@fluentui/react-icons";
 
@@ -10,6 +9,7 @@ import { QuoteDetail } from "./components/quoteDetail";
 import CheckWalletConnectionButton from "./components/wallet/CheckWalletConnectionButton";
 import useConfig from "./hooks/useConfig";
 import { cn } from "./utils/cn";
+import { useWidgetStore } from "./store";
 
 function App() {
   const {
@@ -20,53 +20,40 @@ function App() {
     secondaryBorder,
   } = useConfig();
 
-  const { data: tokens, isSuccess: tokensLoaded } = useChainflipTokens();
+  const { data: tokens, isSuccess: tokensLoaded } = useChainflipTokens();  
 
-  const [sourceToken, setSourceToken] = useState<AssetData | undefined>(
-    undefined
-  );
-  const [destToken, setDestToken] = useState<AssetData | undefined>(undefined);
-
-  const [sourceAmount, setSourceAmount] = useState(0.0);
-  const [destAmount, setDestAmount] = useState(0.0);
+  const store = useWidgetStore();
 
   const [destWalletAddress, setDestWalletAddress] = useState("");
 
-  if (sourceToken === undefined && tokensLoaded) {
-    setSourceToken(tokens!.find((token) => token.symbol === "ETH"));
+  if (store.sourceToken === undefined && tokensLoaded) {
+    store.setSourceToken(tokens!.find((token) => token.symbol === "ETH")!);
   }
 
-  if (destToken === undefined && tokensLoaded) {
-    setDestToken(tokens!.find((token) => token.symbol === "BTC"));
+  if (store.destToken === undefined && tokensLoaded) {
+    store.setDestToken(tokens!.find((token) => token.symbol === "BTC")!);
   }
 
   const swapSDK = useSwapSDK()
 
   const executeBridge = () => {
     swapSDK.executeSwap({
-      amount: sourceAmount.toString(),
-      srcAsset: sourceToken!.asset,
-      srcChain: sourceToken!.chain,
-      destAsset: destToken!.asset,
-      destChain: destToken!.chain,
+      amount: store.sourceAmount.toString(),
+      srcAsset: store.sourceToken!.asset,
+      srcChain: store.sourceToken!.chain,
+      destAsset: store.destToken!.asset,
+      destChain: store.destToken!.chain,
       destAddress: destWalletAddress,
     });
   };
 
   const swapTokens = () => {
-    const tmpToken = sourceToken;
-    const tmpAmount = sourceAmount;
-
-    setSourceToken(destToken);
-    setSourceAmount(destAmount);
-
-    setDestToken(tmpToken);
-    setDestAmount(tmpAmount);
+    store.swapSourceWithDest();
   };
 
   if (
-    sourceToken !== undefined &&
-    destToken !== undefined &&
+    store.sourceToken !== undefined &&
+    store.destToken !== undefined &&
     tokens != undefined
   ) {
     return (
@@ -87,10 +74,10 @@ function App() {
         <div className="w-full flex flex-col items-center justify-center gap-4">
           <TokenBox
             label="From"
-            amount={sourceAmount}
-            selectedToken={sourceToken}
-            onTokenChanged={(token) => setSourceToken(token)}
-            onAmountChanged={(newValue) => setSourceAmount(newValue)}
+            amount={store.sourceAmount}
+            selectedToken={store.sourceToken}
+            onTokenChanged={(token) => store.setSourceToken(token)}
+            onAmountChanged={(newValue) => store.setSourceAmount(newValue)}
             tokens={tokens}
           />
 
@@ -106,11 +93,11 @@ function App() {
 
           <TokenBox
             label="To"
-            amount={destAmount}
-            selectedToken={destToken}
-            onTokenChanged={(token) => setDestToken(token)}
+            amount={store.destAmount}
+            selectedToken={store.destToken}
+            onTokenChanged={(token) => store.setDestToken(token)}
             tokens={tokens}
-            onAmountChanged={(newValue) => setDestAmount(newValue)}
+            onAmountChanged={(newValue) => store.setDestAmount(newValue)}
           />
 
           <div className="w-full flex items-center justify-between">
@@ -129,11 +116,11 @@ function App() {
           </div>
 
           <QuoteDetail
-            sourceChain={sourceToken.chain}
-            sourceToken={sourceToken}
-            destChain={destToken.chain}
-            destToken={destToken}
-            amount={sourceAmount.toString()}
+            sourceChain={store.sourceToken.chain}
+            sourceToken={store.sourceToken}
+            destChain={store.destToken.chain}
+            destToken={store.destToken}
+            amount={store.sourceAmount.toString()}
           />
 
           <CheckWalletConnectionButton>

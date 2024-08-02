@@ -1,38 +1,41 @@
 import { ArrowSwap16Regular } from "@fluentui/react-icons";
 import { useTokensInfo } from "../hooks/useTokensInfo";
 import { AssetData } from "@chainflip/sdk/swap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useConfig from "../hooks/useConfig";
 import { cn } from "../utils/cn";
 
-interface IProps {
-  onChange: (newAmount: number) => void;
-  token: AssetData;
+interface IAmountBoxProps {  
+  token: AssetData;  
   amount: number;
+  onChange: (amount:number)=>void;
 }
 
-const AmountBox = (props: IProps) => {
+
+const AmountBox = (props: IAmountBoxProps) => {
+
   const { tertiaryBackground, primaryBorderFocus, primaryText } = useConfig();
-
   const { getTokenInfo, isLoaded } = useTokensInfo();
-  const { token, onChange } = props;
+  
+  const { token,amount: tokenAmount,onChange } = props;
 
-  const [amount, setAmount] = useState(props.amount.toString());
-
-  const [parsedAmount, setParsedAmount] = useState(0);
   const [useUSDAmount, setUseUSDAmount] = useState(false);
+  const [amount,setAmount] = useState("")
+
+  useEffect(()=>{    
+    setAmount(props.amount.toString())
+  },[props.amount])
+  
 
   const toggleTokenUSD = () => {
     setUseUSDAmount(!useUSDAmount);
 
     if (useUSDAmount) {
-      const calculatedAmount = parsedAmount / getTokenInfo(token)?.price;
+      const calculatedAmount = tokenAmount / getTokenInfo(token)?.price;
       setAmount(calculatedAmount.toString());
-      setParsedAmount(calculatedAmount);
     } else {
-      const calculatedAmount = parsedAmount * getTokenInfo(token)?.price;
-      setAmount(calculatedAmount.toString());
-      setParsedAmount(calculatedAmount);
+      const calculatedAmount = tokenAmount  * getTokenInfo(token)?.price;
+      setAmount(calculatedAmount.toString());      
     }
   };
 
@@ -40,8 +43,7 @@ const AmountBox = (props: IProps) => {
     setAmount(amount.toString());
 
     const floatAmount = parseFloat(amount === "" ? "0" : amount);
-    if (!isNaN(floatAmount)) {
-      setParsedAmount(floatAmount);
+    if (!isNaN(floatAmount)) {     
       onChange(
         useUSDAmount ? floatAmount / getTokenInfo(token)?.price : floatAmount
       );
@@ -85,8 +87,8 @@ const AmountBox = (props: IProps) => {
         >
           {!useUSDAmount ? "$" : ""}
           {useUSDAmount
-            ? parsedAmount / getTokenInfo(token).price
-            : parsedAmount * getTokenInfo(token).price}{" "}
+            ? tokenAmount  / getTokenInfo(token).price
+            : tokenAmount  * getTokenInfo(token).price}{" "}
           {useUSDAmount ? token.symbol : null}
         </p>
       </div>

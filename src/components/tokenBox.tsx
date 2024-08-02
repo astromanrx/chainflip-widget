@@ -7,6 +7,7 @@ import { cn } from "../utils/cn";
 import useConfig from "../hooks/useConfig";
 import useGetUserBalance from "../hooks/useGetUserBalance";
 import CircularLoader from "./wallet/ui/CircularLoader";
+import { useWidgetStore } from "../store";
 
 interface IProps {
   label: "From" | "To";
@@ -39,6 +40,19 @@ const TokenBox = ({
     isSuccess: isSuccessUserTokenBalance,
   } = useGetUserBalance({ token: selectedToken });
 
+  const store = useWidgetStore();
+
+  const setAmountPercent = (percentage:number)=>{
+    if(userTokenBalance !== undefined){
+      console.log(`Setting source amount to ${userTokenBalance * percentage} `)
+      store.setSourceAmount(userTokenBalance * percentage);
+    }else{
+      console.log(userTokenBalance)
+    }
+  }  
+
+  
+
   return (
     <div
       className={cn(
@@ -60,19 +74,19 @@ const TokenBox = ({
 
                 <p className={cn("", primaryText)}>{userTokenBalance?.toFixed(5) || "-"}</p>
 
-                <button className="h-6 w-10 flex items-center justify-center rounded-lg border border-white bg-black hover:bg-opacity-80 text-xs text-white hover:border-transparent outline-none focus:outline-none">
+                <button onClick={()=>setAmountPercent(1.0)} className="h-6 w-10 flex items-center justify-center rounded-lg border border-white bg-black hover:bg-opacity-80 text-xs text-white hover:border-transparent outline-none focus:outline-none">
                   Max
                 </button>
 
-                <button className="h-6 w-10 flex items-center justify-center rounded-lg border border-white bg-black hover:bg-opacity-80 text-xs text-white hover:border-transparent outline-none focus:outline-none">
+                <button onClick={()=>setAmountPercent(0.75)} className="h-6 w-10 flex items-center justify-center rounded-lg border border-white bg-black hover:bg-opacity-80 text-xs text-white hover:border-transparent outline-none focus:outline-none">
                   75%
                 </button>
 
-                <button className="h-6 w-10 flex items-center justify-center rounded-lg border border-white bg-black hover:bg-opacity-80 text-xs text-white hover:border-transparent outline-none focus:outline-none">
+                <button onClick={()=>setAmountPercent(0.5)} className="h-6 w-10 flex items-center justify-center rounded-lg border border-white bg-black hover:bg-opacity-80 text-xs text-white hover:border-transparent outline-none focus:outline-none">
                   50%
                 </button>
 
-                <button className="h-6 w-10 flex items-center justify-center rounded-lg border border-white bg-black hover:bg-opacity-80 text-xs text-white hover:border-transparent outline-none focus:outline-none">
+                <button onClick={()=>setAmountPercent(0.25)} className="h-6 w-10 flex items-center justify-center rounded-lg border border-white bg-black hover:bg-opacity-80 text-xs text-white hover:border-transparent outline-none focus:outline-none">
                   25%
                 </button>
               </div>
@@ -96,8 +110,8 @@ const TokenBox = ({
 
         <AmountBox
           token={selectedToken}
-          amount={amount}
-          onChange={onAmountChanged}
+          amount={amount}     
+          onChange={onAmountChanged}     
         />
       </div>
     </div>
