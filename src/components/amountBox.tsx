@@ -87,8 +87,8 @@ const AmountBox = (props: IAmountBoxProps) => {
         >
           {!useUSDAmount ? "$" : ""}
           {useUSDAmount
-            ? tokenAmount  / getTokenInfo(token).price
-            : tokenAmount  * getTokenInfo(token).price}{" "}
+            ? (tokenAmount  / getTokenInfo(token).price).toFixed(5)
+            : (tokenAmount  * getTokenInfo(token).price).toFixed(5) }{" "}
           {useUSDAmount ? token.symbol : null}
         </p>
       </div>

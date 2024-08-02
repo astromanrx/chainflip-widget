@@ -10,6 +10,7 @@ import CheckWalletConnectionButton from "./components/wallet/CheckWalletConnecti
 import useConfig from "./hooks/useConfig";
 import { cn } from "./utils/cn";
 import { useWidgetStore } from "./store";
+import CircularLoader from "./components/wallet/ui/CircularLoader";
 
 function App() {
   const {
@@ -138,7 +139,7 @@ function App() {
       </div>
     );
   } else {
-    return <div>Loading...</div>;
+    return <CircularLoader />;
   }
 }
 

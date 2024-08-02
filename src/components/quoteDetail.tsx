@@ -146,7 +146,7 @@ const QuoteDetail = ({
                       fee on {fee?.chain}:
                     </p>
                     <p className={primaryText}>
-                      {parseFloat(fee?.amount) / getTokenDecimal(fee?.asset)}{" "}
+                      {(parseFloat(fee?.amount) / getTokenDecimal(fee?.asset)).toFixed(5)}{" "}
                       {fee?.asset}
                     </p>
                   </div>

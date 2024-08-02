@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTokensInfo } from "../hooks/useTokensInfo";
 import { cn } from "../utils/cn";
 import useConfig from "../hooks/useConfig";
+import CircularLoader from "./wallet/ui/CircularLoader";
 
 interface IProps {
   tokens: Array<AssetData>;
@@ -44,7 +45,7 @@ const TokenDropDown = ({ tokens, onChange, selectedToken }: IProps) => {
   }, [selectedToken]);
 
   if(! isLoaded)
-    return <div>Loading...</div>
+    return <CircularLoader />
 
   return (
     <div className="relative flex items-center justify-center">
