@@ -75,7 +75,8 @@ const QuoteDetail = ({
               </p>
 
               <ArrowSwap16Regular className={cn("h-5", primaryText)} />
-              <p className="ml-2 text-black">{destToken?.symbol}</p>
+              <p className="ml-2 text-black">{ethers.formatUnits(data?.quote.egressAmount, destToken.decimals)}{" "}
+              {destToken?.symbol}</p>
             </div>
 
             <button className="size-6 min-w-6 flex items-center justify-center bg-transparent border-none outline-none focus:outline-none hover:border-none">
