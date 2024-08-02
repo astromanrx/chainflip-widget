@@ -4,6 +4,7 @@ import { AssetData } from "@chainflip/sdk/swap";
 import { useEffect, useState } from "react";
 import useConfig from "../hooks/useConfig";
 import { cn } from "../utils/cn";
+import CircularLoader from "./wallet/ui/CircularLoader";
 
 interface IAmountBoxProps {  
   token: AssetData;  
@@ -17,36 +18,46 @@ const AmountBox = (props: IAmountBoxProps) => {
   const { tertiaryBackground, primaryBorderFocus, primaryText } = useConfig();
   const { getTokenInfo, isLoaded } = useTokensInfo();
   
-  const { token,amount: tokenAmount,onChange } = props;
+  const { token,onChange } = props;
 
   const [useUSDAmount, setUseUSDAmount] = useState(false);
-  const [amount,setAmount] = useState("")
+  const [amount,setAmount] = useState("")  
+  const [transformedAmount,setTransformedAmount] = useState("")
 
-  useEffect(()=>{    
-    setAmount(props.amount.toString())
-  },[props.amount])
+  // useEffect(()=>{    
+  //   setAmount(props.amount.toString())
+  // },[props.amount])
+
+  const convertToUSD = (amount: number, token: AssetData) => {    
+    const result =  (amount * getTokenInfo(token)?.price).toFixed(2)
+    console.log(`Convert ${amount}${token.symbol} to usd equals to ${result}`)
+    return result
+  }
+
+  const fromUSD = (amount: number,token: AssetData)=> {    
+    const result =  (amount / getTokenInfo(token)?.price).toFixed(5)
+    console.log(`Convert ${amount}$ to ${token.symbol} equals to ${result}`)
+    return result
+  }
   
 
   const toggleTokenUSD = () => {
-    setUseUSDAmount(!useUSDAmount);
-
-    if (useUSDAmount) {
-      const calculatedAmount = tokenAmount / getTokenInfo(token)?.price;
-      setAmount(calculatedAmount.toString());
-    } else {
-      const calculatedAmount = tokenAmount  * getTokenInfo(token)?.price;
-      setAmount(calculatedAmount.toString());      
-    }
+    setUseUSDAmount(!useUSDAmount);   
+    setTransformedAmount(amount)
+    setAmount(transformedAmount)       
   };
+  
 
   const onAmountChanged = (amount: string) => {
     setAmount(amount.toString());
 
-    const floatAmount = parseFloat(amount === "" ? "0" : amount);
-    if (!isNaN(floatAmount)) {     
+    const realAmount = parseFloat(amount === "" ? "0" : amount);
+    if (!isNaN(realAmount)) {     
       onChange(
-        useUSDAmount ? floatAmount / getTokenInfo(token)?.price : floatAmount
+        parseFloat(useUSDAmount?transformedAmount: amount)
       );
+      
+      setTransformedAmount( useUSDAmount? fromUSD(realAmount,token): convertToUSD(realAmount,token) );
     }
   };
 
@@ -86,15 +97,13 @@ const AmountBox = (props: IAmountBoxProps) => {
           )}
         >
           {!useUSDAmount ? "$" : ""}
-          {useUSDAmount
-            ? (tokenAmount  / getTokenInfo(token).price).toFixed(5)
-            : (tokenAmount  * getTokenInfo(token).price).toFixed(5) }{" "}
+          {transformedAmount}
           {useUSDAmount ? token.symbol : null}
         </p>
       </div>
     );
   } else {
-    return <div>Loading...</div>;
+    return <CircularLoader />;
   }
 };
 
