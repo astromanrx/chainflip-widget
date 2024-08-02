@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import type { AssetData, Chain } from "@chainflip/sdk/swap";
-
-import { swapSDK } from "../swapSDK";
+import { SwapSDK, SwapSDKOptions, type AssetData, type Chain } from "@chainflip/sdk/swap";
 import { queries } from "../static/queries";
 import { useDebounce } from "./useDebounce";
 import { applyDecimal } from "../utils";
+import { swapSDK } from "../swapSDK";
 
 interface IProps {
   sourceChain: Chain;
@@ -13,6 +12,7 @@ interface IProps {
   destToken: AssetData;
   amount: string;
 }
+
 
 const useGetQuote = ({
   destToken,

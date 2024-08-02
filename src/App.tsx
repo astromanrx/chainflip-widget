@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowSwap20Regular } from "@fluentui/react-icons";
 
 import useChainflipTokens from "./hooks/useChainflipTokens";
-import { swapSDK } from "./swapSDK";
+import { useSwapSDK } from "./hooks/useSwapSDK";
 import { TokenBox } from "./components/tokenBox";
 import { QuoteDetail } from "./components/quoteDetail";
 import CheckWalletConnectionButton from "./components/wallet/CheckWalletConnectionButton";
@@ -39,6 +39,8 @@ function App() {
   if (destToken === undefined && tokensLoaded) {
     setDestToken(tokens!.find((token) => token.symbol === "BTC"));
   }
+
+  const swapSDK = useSwapSDK()
 
   const executeBridge = () => {
     swapSDK.executeSwap({
